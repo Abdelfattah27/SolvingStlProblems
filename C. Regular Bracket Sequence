@@ -1,0 +1,46 @@
+/// C. Longest Regular Bracket Sequence
+/// http://codeforces.com/contest/5/problem/C
+
+
+#include<bits/stdc++.h>
+using namespace std ;
+int frq[1000005] = {} ;
+stack <int>st ; // the nearest index of "(" ;
+string s ;
+int main()
+{
+    cin>>s ;
+    for(int i = 0 ; i < s.size() ; i++)
+    {
+        if(s[i] == '(')
+            st.push(i) ;
+        else if(!st.empty() && s[i] == ')')
+        {
+            int len = i - st.top() + 1 ;
+            frq[i] = len ;
+            st.pop() ;
+        }
+    }
+    for(int i = 0 ; i < s.size() ; i++)
+    {
+        if(frq[i] > 0 && i - frq[i] >= 0 && frq[i - frq[i]] > 0 )
+            frq[i] += frq[i-frq[i]] ;
+    }
+    int maxi = -1, cnt = 0 ;
+    for(int i = 0 ; i < s.size() ; i ++)
+    {
+        if(frq[i] > maxi)
+        {
+            maxi = frq[i] ;
+            cnt = 1 ;
+        }
+        else if(maxi == frq[i])
+        {
+            cnt++ ;
+        }
+        //cout<<frq[i]<< " " ;
+    }
+    if(maxi == 0)
+        cnt = 1 ;
+    cout<<maxi<<" "<<cnt<<endl;
+}
