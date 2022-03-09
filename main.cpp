@@ -1,45 +1,59 @@
-/// problem A
-/// http://codeforces.com/group/nMgBPsURd2/contest/339715/problem/A
-
-
-#include<bits/stdc++.h>
-using namespace std ;
-stack <int>st ;  // the nearest index of "(" ;
-
-string s ;
+/// problem B
+/// http://codeforces.com/group/JVrN4brTDU/contest/339715/problem/B
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
 int main()
 {
-    int t ;
-    cin>>t ;
-    while(t--)
+    int m, n;
+    cin >> n >> m;
+    vector<pair<int, int>> vec(n);
+    for (auto& it : vec)
+        cin >> it.first >> it.second;
+    sort(vec.begin(), vec.end());
+    vector<pair<int, int >> minimizer;
+    for (auto it : vec)
     {
-        int frq[200] = {};
-
-        cin>>s ;
-        for(int i = 0 ; i < s.size() ; i++)
+        if (minimizer.empty() || it.first > minimizer.back().second)
         {
-            char c = s[i] ;
-            if(c == '{')
-              st.push( 1) ;
-            else if(c ==',')
+            minimizer.push_back(it);
+        }
+        else
+        {
+            minimizer.back().first = min(minimizer.back().first, it.first);
+            minimizer.back().second = max(minimizer.back().second, it.second);
+        }
+    }
+    int q;
+    cin >> q;
+    while (q--)
+    {
+        int l, r, mn;
+        cin >> l >> r;
+        mn = min(l, r);
+        r = max(l, r);
+        l = mn;
+        auto c = lower_bound(minimizer.begin(), minimizer.end(), make_pair(l, 0));
+        if ((c != minimizer.end()) && (c->first) == l)
+        {
+            if (c->second >= r)
+                cout << "YES" << endl;
+            else
             {
-                st.top() ++ ;
+                cout << "NO" << endl;
             }
-            else if(c == '}')
-            {
-                frq[st.size()] = max( frq[st.size()] , st.top()) ;
-                st.pop() ;
-            }
+        }
+        else
+        {
+
+            if (c != minimizer.begin() && (((--c)->second) >= r))
+                cout << "YES" << endl;
+            else
+                cout << "NO" << endl;
 
         }
-       for(int i = 1 ; i < 200 ; i++)
-       {
-           if(frq[i])
-            cout<<'['<<frq[i]<<']' ;
-           else
-            break ;
-       }
-       cout<<endl;
+
     }
 
 }
